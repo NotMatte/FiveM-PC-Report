@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FiveM PC Report</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12h3.5l2.5-6 4 12 2.5-6H21"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">FiveM PC Report</div>
+          <div class="brand-sub" id="version">versione —</div>
+        </div>
+      </div>
+
+      <nav class="steps" aria-label="Passaggi">
+        <div class="nav-step" data-step="start"><span class="nav-num">1</span><span>Racconta il problema</span></div>
+        <div class="nav-step" data-step="scan"><span class="nav-num">2</span><span>Analisi</span></div>
+        <div class="nav-step" data-step="result"><span class="nav-num">3</span><span>Risultato</span></div>
+      </nav>
+
+      <div class="rail-bottom">
+        <div class="status" id="fivem-status">
+          <span class="dot"></span><span class="status-text">Controllo FiveM…</span>
+        </div>
+        <button class="link-btn" id="open-root" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Report salvati
+        </button>
+        <div class="foot">Open source · MIT</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <!-- 1. Start -->
+      <section class="view" data-view="start">
+        <header class="hero">
+          <div class="eyebrow">Diagnosi per FiveM</div>
+          <h1>Cosa rallenta FiveM sul tuo PC?</h1>
+          <p class="lead">Controllo processore, RAM, scheda video, Windows, impostazioni di GTA V e FiveM, mod e log degli errori.
+            Alla fine hai un report da mandare a chi ti aiuta, oppure da incollare direttamente in Claude.</p>
+        </header>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Raccontaci il problema <span class="muted">facoltativo</span></div>
+            <label class="field">
+              <span>Nome o nickname</span>
+              <input id="f-name" maxlength="60" placeholder="Per esempio: Marco" autocomplete="off">
+            </label>
+            <label class="field">
+              <span>Cosa succede?</span>
+              <textarea id="f-problem" rows="4" maxlength="1200" placeholder="Per esempio: scatta quando giro in macchina, crasha entrando nel server, texture sfocate…"></textarea>
+            </label>
+            <label class="field">
+              <span>Quanti FPS fai, e dove?</span>
+              <input id="f-fps" maxlength="200" placeholder="Per esempio: 20-25 FPS al ghetto, 60 in città" autocomplete="off">
+            </label>
+          </div>
+
+          <div class="stack">
+            <div class="card live-card" id="live-card">
+              <div class="live-head">
+                <div>
+                  <div class="card-title">Analisi dal vivo</div>
+                  <p class="small" id="live-hint">Con FiveM aperto misuro cosa limita gli FPS mentre giochi: processore o scheda video.</p>
+                </div>
+                <button class="switch" id="live-toggle" role="switch" aria-checked="false" type="button" aria-label="Analisi dal vivo"><span></span></button>
+              </div>
+              <div class="seg" id="live-seconds" role="radiogroup" aria-label="Durata">
+                <button type="button" data-s="15">15 s</button>
+                <button type="button" data-s="30" class="on">30 s</button>
+                <button type="button" data-s="60">60 s</button>
+              </div>
+              <ol class="howto">
+                <li>Apri FiveM ed entra nel server.</li>
+                <li>Mettiti dove fai meno FPS.</li>
+                <li>Premi <b>Avvia analisi</b> e torna in gioco: resta lì, senza menu aperti.</li>
+              </ol>
+            </div>
+
+            <div class="card privacy">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              <p class="small">Resta tutto sul tuo PC: non invio niente a nessuno. Nel report oscuro nome utente, nome del PC,
+                indirizzi IP e identificativi di FiveM. Non tocco nessun file e non entro nel gioco.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-row">
+          <button class="btn btn-primary btn-lg" id="start" type="button">
+            Avvia analisi
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <span class="small muted" id="start-note">Ci vogliono circa 20 secondi.</span>
+        </div>
+      </section>
+
+      <!-- 2. Scan -->
+      <section class="view" data-view="scan" hidden>
+        <header class="hero">
+          <div class="eyebrow">Analisi in corso</div>
+          <h1 id="scan-title">Sto controllando il tuo PC</h1>
+          <p class="lead" id="scan-lead">Non chiudere la finestra.</p>
+        </header>
+        <div class="progress"><div class="bar" id="bar"></div></div>
+        <div class="scan-grid">
+          <ul class="checklist" id="checklist"></ul>
+          <div class="card countdown" id="countdown" hidden>
+            <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="52" class="ring-bg"/>
+              <circle cx="60" cy="60" r="52" class="ring-fg" id="cd-ring"/>
+            </svg>
+            <div class="cd-num" id="cd-num">30</div>
+            <div class="cd-label">Torna in gioco e resta dove fai pochi FPS, senza menu aperti.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Result -->
+      <section class="view" data-view="result" hidden>
+        <div class="result-top">
+          <div class="score card">
+            <svg class="ring big" viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="52" class="ring-bg"/>
+              <circle cx="60" cy="60" r="52" class="ring-fg" id="score-ring"/>
+            </svg>
+            <div class="score-num" id="score-num">—</div>
+            <div class="score-label">punteggio</div>
+          </div>
+          <div class="card verdict" id="verdict">
+            <div class="eyebrow" id="verdict-kind">Verdetto</div>
+            <h2 id="verdict-title"></h2>
+            <p id="verdict-text"></p>
+            <div class="chips" id="chips"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="copy" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            Copia il prompt per Claude
+          </button>
+          <button class="btn" id="open-report" type="button">Apri il report</button>
+          <button class="btn" id="open-folder" type="button">Apri la cartella</button>
+          <span class="spacer"></span>
+          <button class="btn btn-ghost" id="again" type="button">Nuova analisi</button>
+        </div>
+        <p class="small muted folder-note" id="folder-note"></p>
+
+        <div class="tabs" role="tablist">
+          <button class="tab on" data-tab="findings" role="tab" type="button">Cosa ho trovato <span class="count" id="count-findings"></span></button>
+          <button class="tab" data-tab="data" role="tab" type="button">Dati completi</button>
+        </div>
+        <div class="tab-panel" data-panel="findings" id="findings"></div>
+        <div class="tab-panel" data-panel="data" id="data" hidden></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

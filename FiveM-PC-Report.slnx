@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FivemPcReport/FivemPcReport.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FivemPcReport.Tests/FivemPcReport.Tests.csproj" />
+  </Folder>
+</Solution>
